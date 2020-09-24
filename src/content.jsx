@@ -1,7 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 
 export default function Content() {
-    return <div>
-    <h1>HOST</h1>
-    Hi there, I'm React from Webpack 5.</div>
+  return (
+    <div>
+      <h1>Mini App</h1>
+      <p>I am mini app yo</p>
+    </div>
+  );
 }

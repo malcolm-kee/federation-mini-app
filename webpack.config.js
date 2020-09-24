@@ -1,51 +1,59 @@
-const HtmlWebPackPlugin = require("html-webpack-plugin");
-const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
+const HtmlWebPackPlugin = require('html-webpack-plugin');
+const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
 
 /**
- * @type {import('webpack').Configuration}
+ * @returns {import('webpack').Configuration}
  */
-module.exports = {
-  output: {
-    // publicPath: "http://localhost:8080/",
-    publicPath: "https://federation-mini-app.vercel.app/",
-  },
+module.exports = (env, { mode }) => {
+  const publicPath =
+    process.env.PUBLIC_PATH ||
+    (mode === 'development'
+      ? 'http://localhost:8080/'
+      : 'https://federation-mini-app.vercel.app/');
 
-  resolve: {
-    extensions: [".jsx", ".js", ".json"],
-  },
+  return {
+    mode,
+    output: {
+      publicPath,
+    },
 
-  devServer: {
-    port: 8080,
-  },
+    resolve: {
+      extensions: ['.jsx', '.js', '.json'],
+    },
 
-  module: {
-    rules: [
-      {
-        test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
-      },
-      {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
+    devServer: {
+      port: 8080,
+    },
+
+    module: {
+      rules: [
+        {
+          test: /\.css$/i,
+          use: ['style-loader', 'css-loader'],
         },
-      },
-    ],
-  },
+        {
+          test: /\.(js|jsx)$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+          },
+        },
+      ],
+    },
 
-  plugins: [
-    new ModuleFederationPlugin({
-      name: "starter",
-      filename: "remoteEntry.js",
-      remotes: {},
-      exposes: {
-        './content': './src/content'
-      },
-      shared: require("./package.json").dependencies,
-    }),
-    new HtmlWebPackPlugin({
-      template: "./src/index.html",
-    }),
-  ],
+    plugins: [
+      new ModuleFederationPlugin({
+        name: 'starter',
+        filename: 'remoteEntry.js',
+        remotes: {},
+        exposes: {
+          './content': './src/content',
+        },
+        shared: require('./package.json').dependencies,
+      }),
+      new HtmlWebPackPlugin({
+        template: './src/index.html',
+      }),
+    ],
+  };
 };
