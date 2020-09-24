@@ -11,6 +11,8 @@ module.exports = (env, { mode }) => {
       ? 'http://localhost:8080/'
       : 'https://federation-mini-app.vercel.app/');
 
+  const exposedName = process.env.EXPOSED_NAME || 'starter';
+
   return {
     mode,
     output: {
@@ -43,7 +45,7 @@ module.exports = (env, { mode }) => {
 
     plugins: [
       new ModuleFederationPlugin({
-        name: 'starter',
+        name: exposedName,
         filename: 'remoteEntry.js',
         remotes: {},
         exposes: {
