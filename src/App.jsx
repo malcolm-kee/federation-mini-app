@@ -1,9 +1,12 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React from 'react';
+import ReactDOM from 'react-dom';
 import Content from './content';
 
-import "./index.css";
+import './index.css';
 
-const App = () => <Content />;
-
-ReactDOM.render(<App />, document.getElementById("app"));
+const App = () => (
+  <React.Suspense fallback="Loading...">
+    <Content />
+  </React.Suspense>
+);
+ReactDOM.render(<App />, document.getElementById('app'));

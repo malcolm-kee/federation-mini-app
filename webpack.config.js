@@ -1,5 +1,6 @@
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
+const { dependencies } = require('./package.json');
 
 /**
  * @returns {import('webpack').Configuration}
@@ -27,6 +28,8 @@ module.exports = (env, { mode }) => {
       port: 8080,
     },
 
+    devtool: false,
+
     module: {
       rules: [
         {
@@ -47,11 +50,23 @@ module.exports = (env, { mode }) => {
       new ModuleFederationPlugin({
         name: exposedName,
         filename: 'remoteEntry.js',
-        remotes: {},
+        remotes: {
+          main: 'malcolm@https://federation-main-app.vercel.app/remoteEntry.js',
+        },
         exposes: {
           './content': './src/content',
         },
-        shared: require('./package.json').dependencies,
+        shared: {
+          ...dependencies,
+          react: {
+            singleton: true,
+            requiredVersion: dependencies.react,
+          },
+          'react-dom': {
+            singleton: true,
+            requiredVersion: dependencies['react-dom'],
+          },
+        },
       }),
       new HtmlWebPackPlugin({
         template: './src/index.html',
