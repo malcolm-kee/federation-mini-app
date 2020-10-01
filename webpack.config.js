@@ -1,6 +1,11 @@
+require('dotenv').config();
+
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
 const { dependencies } = require('./package.json');
+
+const mainAppUrl =
+  process.env.MAIN_URL || 'https://federation-main-app.vercel.app';
 
 /**
  * @returns {import('webpack').Configuration}
@@ -51,7 +56,7 @@ module.exports = (env, { mode }) => {
         name: exposedName,
         filename: 'remoteEntry.js',
         remotes: {
-          main: 'malcolm@https://federation-main-app.vercel.app/remoteEntry.js',
+          main: `malcolm@${mainAppUrl}/remoteEntry.js`,
         },
         exposes: {
           './content': './src/content',
