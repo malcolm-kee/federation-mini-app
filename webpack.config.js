@@ -56,7 +56,7 @@ module.exports = (env, { mode }) => {
         name: exposedName,
         filename: 'remoteEntry.js',
         remotes: {
-          main: `malcolm@${mainAppUrl}/remoteEntry.js`,
+          main: `federation-demo-main@${mainAppUrl}/remoteEntry.js`,
         },
         exposes: {
           './content': './src/content',
