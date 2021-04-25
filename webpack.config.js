@@ -1,11 +1,16 @@
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+const path = require('path');
+
+const pkgJson = require('./package.json');
 
 /**
  * @returns {import('webpack').Configuration}
  */
 module.exports = (env, { mode }) => {
   const publicPath =
+    process.env.VERCEL_URL ||
     process.env.PUBLIC_PATH ||
     (mode === 'development'
       ? 'http://localhost:8080/'
@@ -15,6 +20,9 @@ module.exports = (env, { mode }) => {
     mode,
     output: {
       publicPath,
+      clean: true,
+      filename: '[name].[contenthash].js',
+      path: path.resolve(__dirname, 'dist'), // workaround for https://github.com/shellscape/webpack-manifest-plugin/issues/256
     },
 
     resolve: {
@@ -44,17 +52,29 @@ module.exports = (env, { mode }) => {
 
     plugins: [
       new ModuleFederationPlugin({
-        name: process.env.EXPOSED_NAME || 'starter',
-        filename: 'remoteEntry.js',
+        name: pkgJson.federations.name,
+        filename:
+          mode === 'development'
+            ? 'remoteEntry.js'
+            : 'remoteEntry.[contenthash].js',
         remotes: {},
-        exposes: {
-          './content': './src/content',
+        exposes: pkgJson.federations.exposes,
+        shared: {
+          ...pkgJson.dependencies,
+          react: {
+            singleton: true,
+            requiredVersion: pkgJson.dependencies.react,
+          },
+          'react-dom': {
+            singleton: true,
+            requiredVersion: pkgJson.dependencies['react-dom'],
+          },
         },
-        shared: require('./package.json').dependencies,
       }),
       new HtmlWebPackPlugin({
         template: './src/index.html',
       }),
+      new WebpackManifestPlugin(),
     ],
   };
 };
