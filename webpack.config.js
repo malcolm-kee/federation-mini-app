@@ -10,6 +10,7 @@ const pkgJson = require('./package.json');
  */
 module.exports = (env, { mode }) => {
   const publicPath =
+    process.env.VERCEL_URL ||
     process.env.PUBLIC_PATH ||
     (mode === 'development'
       ? 'http://localhost:8080/'
