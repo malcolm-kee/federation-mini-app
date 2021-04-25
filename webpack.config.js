@@ -53,7 +53,10 @@ module.exports = (env, { mode }) => {
     plugins: [
       new ModuleFederationPlugin({
         name: pkgJson.federations.name,
-        filename: 'remoteEntry.[contenthash].js',
+        filename:
+          mode === 'development'
+            ? 'remoteEntry.js'
+            : 'remoteEntry.[contenthash].js',
         remotes: {},
         exposes: pkgJson.federations.exposes,
         shared: {
@@ -73,17 +76,5 @@ module.exports = (env, { mode }) => {
       }),
       new WebpackManifestPlugin(),
     ],
-    optimization: {
-      runtimeChunk: 'single',
-      splitChunks: {
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-            name: 'vendor',
-            chunks: 'all',
-          },
-        },
-      },
-    },
   };
 };
