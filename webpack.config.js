@@ -4,9 +4,6 @@ const HtmlWebPackPlugin = require('html-webpack-plugin');
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
 const { dependencies } = require('./package.json');
 
-const mainAppUrl =
-  process.env.MAIN_URL || 'https://federation-main-app.vercel.app';
-
 /**
  * @returns {import('webpack').Configuration}
  */
@@ -33,7 +30,7 @@ module.exports = (env, { mode }) => {
       port: 8080,
     },
 
-    devtool: false,
+    devtool: mode === 'development' ? 'eval' : 'source-map',
 
     module: {
       rules: [
@@ -55,9 +52,7 @@ module.exports = (env, { mode }) => {
       new ModuleFederationPlugin({
         name: process.env.EXPOSED_NAME || 'starter',
         filename: 'remoteEntry.js',
-        remotes: {
-          host: `host@${mainAppUrl}/remoteEntry.js`,
-        },
+        remotes: {},
         exposes: {
           './content': './src/content',
         },
