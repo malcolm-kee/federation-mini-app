@@ -5,6 +5,8 @@ const path = require('path');
 
 const pkgJson = require('./package.json');
 
+const port = process.env.PORT || 8080;
+
 /**
  * @returns {import('webpack').Configuration}
  */
@@ -13,13 +15,13 @@ module.exports = (env, { mode }) => {
     process.env.VERCEL_URL ||
     process.env.PUBLIC_PATH ||
     (mode === 'development'
-      ? 'http://localhost:8080/'
+      ? `http://localhost:${port}/`
       : 'https://federation-mini-app.vercel.app/');
 
   return {
     mode,
     output: {
-      publicPath,
+      publicPath: sanitizePublicPath(publicPath),
       clean: true,
       filename: '[name].[contenthash].js',
       path: path.resolve(__dirname, 'dist'), // workaround for https://github.com/shellscape/webpack-manifest-plugin/issues/256
@@ -30,8 +32,7 @@ module.exports = (env, { mode }) => {
     },
 
     devServer: {
-      port: 8080,
-      hot: true,
+      port: port,
     },
 
     module: {
@@ -52,13 +53,12 @@ module.exports = (env, { mode }) => {
 
     plugins: [
       new ModuleFederationPlugin({
-        name: pkgJson.federations.name,
-        filename:
-          mode === 'development'
-            ? 'remoteEntry.js'
-            : 'remoteEntry.[contenthash].js',
+        name: 'mini',
+        filename: 'remoteEntry.js',
+        exposes: {
+          './content': './src/content',
+        },
         remotes: {},
-        exposes: pkgJson.federations.exposes,
         shared: {
           ...pkgJson.dependencies,
           react: {
@@ -77,4 +77,16 @@ module.exports = (env, { mode }) => {
       new WebpackManifestPlugin(),
     ],
   };
+};
+
+/**
+ *
+ * @param {string} str
+ * @returns string
+ */
+const sanitizePublicPath = (str) => {
+  const withTrailingSlash = str.endsWith('/') ? str : `${str}/`;
+  return withTrailingSlash.startsWith('http')
+    ? withTrailingSlash
+    : `https://${withTrailingSlash}`;
 };
