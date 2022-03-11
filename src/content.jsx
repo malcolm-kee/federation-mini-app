@@ -2,8 +2,8 @@ import _ from 'lodash';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-const Container = React.lazy(() => import('main/container'));
-const getRoutes = () => import('main/routes');
+const Container = React.lazy(() => import('host/container'));
+const getRoutes = () => import('host/routes');
 const getRandomString = () =>
   _.times(20, () => _.random(35).toString(36)).join('');
 

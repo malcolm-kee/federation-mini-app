@@ -20,7 +20,9 @@ module.exports = (env, { mode }) => {
   return {
     mode,
     output: {
-      publicPath,
+      publicPath: sanitizePublicPath(publicPath),
+      clean: true,
+      filename: '[name].[contenthash].js',
     },
 
     resolve: {
@@ -54,7 +56,7 @@ module.exports = (env, { mode }) => {
         name: process.env.EXPOSED_NAME || 'starter',
         filename: 'remoteEntry.js',
         remotes: {
-          main: `mother@${mainAppUrl}/remoteEntry.js`,
+          host: `host@${mainAppUrl}/remoteEntry.js`,
         },
         exposes: {
           './content': './src/content',
@@ -76,4 +78,16 @@ module.exports = (env, { mode }) => {
       }),
     ],
   };
+};
+
+/**
+ *
+ * @param {string} str
+ * @returns
+ */
+const sanitizePublicPath = (str) => {
+  const withTrailingSlash = str.endsWith('/') ? str : `${str}/`;
+  return withTrailingSlash.startsWith('http')
+    ? withTrailingSlash
+    : `https://${withTrailingSlash}`;
 };
