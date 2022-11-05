@@ -32,13 +32,28 @@ module.exports = (env, { mode }) => {
 
     devServer: {
       port: port,
+      hot: false,
     },
 
     module: {
       rules: [
         {
           test: /\.css$/i,
-          use: ['style-loader', 'css-loader'],
+          use: [
+            'style-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1,
+                modules: {
+                  auto: true,
+                  localIdentName: isProd
+                    ? '[hash:base64]'
+                    : '[path][name]__[local]',
+                },
+              },
+            },
+          ],
         },
         {
           test: /\.(js|jsx)$/,

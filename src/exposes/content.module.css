@@ -1,0 +1,17 @@
+.root {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.content {
+  transition: all 300ms ease-in-out;
+  max-height: 0px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.content[data-show='true'] {
+  max-height: 600px;
+  opacity: 1;
+}
