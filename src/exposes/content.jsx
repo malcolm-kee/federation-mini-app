@@ -14,7 +14,7 @@ export default function Content() {
         </Button>
       </div>
       <p className={styles.content} data-show={show}>
-        This is an important content in Mini App.
+        This is some updated message! Test first before rollout!
       </p>
     </Container>
   );
