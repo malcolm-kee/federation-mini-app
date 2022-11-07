@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Content from './exposes/content';
-import './index.css';
+import '@mkeeorg/federation-ui/dist/index.css';
 
 const App = () => <Content />;
 

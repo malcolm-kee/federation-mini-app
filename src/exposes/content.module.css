@@ -1,7 +1,8 @@
-.root {
-  max-width: 80rem;
-  margin: 0 auto;
-  padding: 1rem;
+.title {
+  font-size: 3rem;
+  line-height: 1;
+  font-weight: 700;
+  margin-bottom: 2rem;
 }
 
 .content {

@@ -1,3 +1,4 @@
+import { Button, Container } from '@mkeeorg/federation-ui';
 import * as React from 'react';
 import styles from './content.module.css';
 
@@ -5,16 +6,16 @@ export default function Content() {
   const [show, toggle] = React.useReducer((val) => !val, false);
 
   return (
-    <div className={styles.root}>
-      <h1>Mini App</h1>
+    <Container>
+      <h1 className={styles.title}>Mini App</h1>
       <div>
-        <button onClick={toggle} type="button">
+        <Button onClick={toggle} size="small">
           {show ? 'Hide' : 'Show'} Details
-        </button>
+        </Button>
       </div>
       <p className={styles.content} data-show={show}>
         This is an important content in Mini App.
       </p>
-    </div>
+    </Container>
   );
 }

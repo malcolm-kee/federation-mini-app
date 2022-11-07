@@ -26,6 +26,7 @@
     "webpack-dev-server": "^4.7.4"
   },
   "dependencies": {
+    "@mkeeorg/federation-ui": "^1.0.1",
     "lodash": "^4.17.20",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
